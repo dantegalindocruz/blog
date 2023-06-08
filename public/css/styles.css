@@ -1,0 +1,12 @@
+/* mobile style */
+.categories {
+    border: 1px solid grey;
+    display: none;
+    
+}
+
+.categories  h1 {
+    margin: 0 auto;
+}
+
+/* larger screen style */

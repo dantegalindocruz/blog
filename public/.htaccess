@@ -1,0 +1,7 @@
+php_flag display_errors On
+php_flag log_errors On
+php_value error_reporting -1
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . public/index.php
