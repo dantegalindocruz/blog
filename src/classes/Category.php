@@ -19,7 +19,7 @@ class Category {
     }
 
     public function get_all_categoriies() {
-        $sql = 'Select name, description from category';
+        $sql = 'Select name, id from category';
         return $this->db->runSQL($sql)->fetchAll();
     }
 

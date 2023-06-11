@@ -5,10 +5,24 @@ $title = 'Categories';
 $description = 'A list of available categories';
 $categories = $blog->getCategory()->get_all_categoriies();
 ?>
-<?php require '../includes/header.php' ?>
+<?php include '../includes/header.php' ?>
 <main>
     <section class="categories">
-        <h1><?= $title ?></h1>
+        <table>
+            <tr>
+                <th>Category Name</th>
+                <th>Edit | Delete</th>
+            </tr>
+            <?php foreach($categories as $category) {?>
+                <tr>
+                    <td><?= $category['name'] ?></td>
+                    <td>
+                        <a class="edit" href="category.php?id=<?= $category['id'] ?>">Edit</a>
+                        <a class="delete" href="category-delete.php?id=<?= $category['id'] ?>">Delete</a>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
     </section>
 </main>
-<?php require '../includes/footer.php' ?>
+<?php include '../includes/footer.php' ?>
