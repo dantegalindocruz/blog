@@ -7,14 +7,8 @@ class Category {
         $this->db = $db;
     }
 
-    public function createCategory(array $category) : bool {
-        $sql = 'INSERT INTO category (name, description) VALUES(:name, :description)';
-        $this->db->runSQL($sql, $category);    
-        return true;
-    }
-
     public function get_single_category($id) {
-        $sql = "SELECT name, description FROM category WHERE id = :id";
+        $sql = "SELECT name, description, navigation FROM category WHERE id = :id";
         return $this->db->runSQL($sql, [$id])->fetch();
     }
 
@@ -27,5 +21,19 @@ class Category {
         $sql = 'SELECT name, description FROM category LIMIT :amount';
         return $this->db->runSQL($sql, [$amount])->fetchAll();
     }
+
+    public function update_category($id, $arguments): bool {
+        $sql = 'UPDATE category SET name = :name, description = :description, navigation = :navigation WHERE id = :id';
+        $arguments['id'] = $id;
+        $this->db->runSQL($sql, $arguments);
+        return true;
+    }
+
+    public function create_category(array $arguments) : bool {
+        $sql = 'INSERT INTO category (name, description, navigation) VALUES (:name, :description, :navigation);';
+        $this->db->runSQL($sql, $arguments);
+        return true;
+    }
+
 }
 ?>

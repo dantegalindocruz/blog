@@ -5,10 +5,11 @@
 define("APP_ROOT", dirname(__FILE__,2));
 
 //Functions
-require APP_ROOT . '\src\functions.php';
+require APP_ROOT . '\src\includes\functions.php';
 
 // configuration data
 require APP_ROOT . '\config\config.php';
+
 
 // set autoload fuction
 
