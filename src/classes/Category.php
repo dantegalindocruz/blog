@@ -34,5 +34,16 @@ class Category {
         return true;
     }
 
+    public function get_category_name(int $id): string {
+        $sql = 'SELECT name from category WHERE id = :id';
+        return $this->db->runSQL($sql, [$id])->fetchColumn();
+    }
+
+    public function delete_category(int $id): bool {
+        $sql = 'DELETE FROM category WHERE id = :id';
+        $this->db->runSQL($sql, [$id]);
+        return true;
+    }
+
 }
 ?>
