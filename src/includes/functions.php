@@ -13,4 +13,10 @@ function is_text(string $text, int $min = 0, int $max = 1000) : bool
     $length = mb_strlen($text);
     return ($length >= $min and $length <= $max);
 }
+
+// escape content provided by users
+
+function html_escape(string $string): string {
+    return htmlspecialchars($string, ENT_QUOTES|ENT_HTML5, 'UTF-8', true);
+}
 ?>

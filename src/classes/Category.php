@@ -8,7 +8,7 @@ class Category {
     }
 
     public function get_single_category($id) {
-        $sql = "SELECT name, description, navigation FROM category WHERE id = :id";
+        $sql = "SELECT id, name, description, navigation FROM category WHERE id = :id";
         return $this->db->runSQL($sql, [$id])->fetch();
     }
 
@@ -22,9 +22,8 @@ class Category {
         return $this->db->runSQL($sql, [$amount])->fetchAll();
     }
 
-    public function update_category($id, $arguments): bool {
+    public function update_category($arguments): bool {
         $sql = 'UPDATE category SET name = :name, description = :description, navigation = :navigation WHERE id = :id';
-        $arguments['id'] = $id;
         $this->db->runSQL($sql, $arguments);
         return true;
     }

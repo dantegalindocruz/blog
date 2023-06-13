@@ -1,7 +1,10 @@
 <?php
 require '../setup.php';
 
-
+/* 
+    if the page is editing an exiting category, the url will have a query string 
+    with the name id, its value will be the id of the category to edit
+*/
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT); // Gets id and validate
 
 // Initialize category array
@@ -25,6 +28,10 @@ if($id){
     // get category data
     $category = $blog->getCategory()->get_single_category($id);
 
+    /* 
+        If there was an id in the query string, but the database did not find a matching
+        category, the $category varialbe will hold false and the suswquent code block will run
+    */
     // if no category is found
     if(!$category) {
         redirect('categories.php', ['failure' => 'Category not found']);
@@ -32,7 +39,7 @@ if($id){
 }
 
 // Get and validate data once form has been submitted
-
+// checks to see if form has been submitted
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $category['name'] = $_POST['name'];
     $category['description'] = $_POST['description'];
@@ -49,16 +56,28 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     // Check if data is valid, if so update database
 
     if($invalid) {
-        $errors['warming'] = 'Please coorect erros';
+        $errors['warning'] = 'Please correct errors';
     } else {
+        $arguments = $category;
+
         if($id) {
-            $blog->getCategory()->update_category($id, $category);
+            $blog->getCategory()->update_category($category);
+            redirect('categories.php', ['success' => 'Category Saved']);
         } else {
-            unset($arguments['id']); // remove id from category array
-            $blog->getCategory()->create_category($category); 
+            unset($arguments['id']); // remove id from arguments array
+            try {
+                $blog->getCategory()->create_category($arguments);
+                redirect('categories.php', ['success' => 'Category Saved']); 
+            } catch (PDOException $e) {
+                if($e->errorInfo[1] === 1062) {
+                    $errors['warning'] = 'Category name already in use';
+                } else {
+                    throw $e;
+                }
+            }
+            
         }
 }
-    redirect('categories.php', ['success' => 'Category Saved']);
 }
 
 
@@ -70,8 +89,20 @@ $description = $category['description'];
 <?php include '../includes/header.php' ?>
 
 <form action="category.php?id=<?= $id ?>" method="post">
-    <p>Category Name: <input type="text" name="name" value="<?= $category['name']?>" /></p>
-    <p>Description: <textarea name="description"><?= $category['description']?></textarea></p>
+    <h2><?= ($id) ? 'Edit Category' : 'Add New Category'?></h2>
+    <?php if($errors['warning']) { ?>
+        <p><?= $errors['warning'] ?></p>
+    <?php } ?>
+    <p>
+        Category Name: <input type="text" name="name" value="<?= html_escape($category['name'])?>" />
+        <br />
+        <span><?= $errors['name'] ?></span>
+    </p>
+    <p>
+        Description: <textarea name="description"><?= html_escape($category['description'])?></textarea>
+        <br />
+        <span><?= $errors['description'] ?></span>
+    </p>
     <p><input type="checkbox" name="navigation" value="1" <?= ($category['navigation'] === 1) ? 'checked' : '' ?>> Navigation</p>
     <p><input type="submit" value="submit"/></p>
 </form>

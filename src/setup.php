@@ -1,5 +1,5 @@
 <?php
-
+declare (strict_types = 1);
 //Application root directory
 
 define("APP_ROOT", dirname(__FILE__,2));
